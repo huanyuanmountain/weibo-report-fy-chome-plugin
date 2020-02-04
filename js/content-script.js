@@ -11,6 +11,7 @@
 	const loopSecond = 2 // 循环一次的时间
 	const inputBox = document.querySelector('.send_weibo.S_bg2.clearfix.send_weibo_long').children[1].children[0]
 	const reportBtn = document.querySelector('.W_btn_a.btn_30px')
+	const eventManager = new EventTarget()
 	const storageKey = 'douban_bot_report'
 	const reportTimeList = ['06:00', '18:00',]
 	let isNewUser = true
@@ -40,6 +41,7 @@
 			})
 	})
 
+	// 解析对比信息，对比上次和这次的信息
 	const parseComparisonMsg = (cur, lat) => {
 		let str = lat >= cur ? '增加 ' : '减少 '
 		str += Math.abs(lat - cur)
@@ -90,10 +92,80 @@
 		})
 	}
 
-	dataInit()
+	// 创建控制层
+	const createLayer = () => {
+		const layer = document.createElement('div')
+		layer.style = 'display: block; padding: 0px; margin: 0px; z-index: 99999; position: fixed; top:60px; left: 60px; background-color:rgba(255,255,255,0.8);'
+		document.body.appendChild(layer)
+		return layer
+	}
 
-	setInterval(() => {
-		checkNeedReport()
-	}, loopSecond * 1000)
+	// 创建开关按钮
+	const createSwitchButton = (layer) => {
+		const btn = document.createElement('button')
+		btn.innerText = 'bot 开关'
+		btn.style = 'margin: 3px;font-size: 10px;'
+		layer.appendChild(btn)
+		btn.onclick = switchBot
+	}
+
+	// 日志创建标签
+	const createMessageLog = (layer) => {
+		const prg = document.createElement('p')
+		prg.innerText = 'log view \n'
+		prg.style = 'margin: 3px;font-size: 10px;line-height:15px'
+		prg.id = 'message-log-prg'
+		layer.appendChild(prg)
+	}
+
+	// 创建控制面板
+	const createPanel = () => {
+		let layer = createLayer()
+		createSwitchButton(layer)
+		createMessageLog(layer)
+	}
+
+	// bot 开关
+	const switchBot = () => {
+		isRunning = !isRunning
+		eventManager.dispatchEvent(new Event('refreshMsg'))
+	}
+
+	// 事件初始化
+	const eventListenerInit = () => {
+		eventManager.addEventListener('refreshMsg', refreshMessageLog)
+	}
+
+	// 刷新 log
+	const refreshMessageLog = () => {
+		try {
+			const prg = document.getElementById('message-log-prg')
+			let str = isRunning ? '机器人正在运行 (ง •_•)ง' : '机器人休息中 (～﹃～)~zZ'
+			str += '\n发布消息时间：'
+			for (let i = 0; i < reportTimeList.length; i++) {
+				str += '\n' + reportTimeList[i]
+			}
+			prg.innerText = str
+		} catch (e) {
+			console.log('逃避了一个错误 refreshMessageLog')
+		}
+	}
+
+	const main = () => {
+		dataInit()
+		createPanel()
+		eventListenerInit()
+
+		eventManager.dispatchEvent(new Event('refreshMsg'))
+
+		setInterval(() => {
+			if (isRunning) {
+				checkNeedReport()
+				// console.log('working...')
+			}
+		}, loopSecond * 1000)
+	}
+
+	main()
 
 }, 1 * 1000)

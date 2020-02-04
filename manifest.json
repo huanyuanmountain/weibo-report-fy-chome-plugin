@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "驱疫员",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "微博 bot 浏览器插件",
 	"author": "me",
 	"icons": {
