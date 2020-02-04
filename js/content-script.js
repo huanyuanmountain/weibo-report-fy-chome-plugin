@@ -12,7 +12,7 @@
 	const inputBox = document.querySelector('.send_weibo.S_bg2.clearfix.send_weibo_long').children[1].children[0]
 	const reportBtn = document.querySelector('.W_btn_a.btn_30px')
 	const storageKey = 'douban_bot_report'
-	const reportTimeList = ['8:00', '18:00', '13:44']
+	const reportTimeList = ['06:00', '18:00',]
 	let isNewUser = true
 	let isRunning = false
 	let dataRecord = {}
@@ -21,24 +21,30 @@
 	const getReportMessage = () => new Promise((resolve, reject) => {
 		axios.get('https://www.tianqiapi.com/api?version=epidemic&appid=23035354&appsecret=8YvlPNrz')
 			.then((res) => {
+				// console.log(res.data)
 				let d = res.data.data
 				let msg = `最近数据更新时间：${d.date}`
 				msg += `\n\n全国数据：确诊：${d.diagnosed} 人，疑似：${d.suspect} 人，死亡：${d.death} 人，治愈：${d.cured} 人`
+
 				if (!isNewUser) {
-					// msg += '\n\n相比上次数据：'
+					msg += `\n\n相比上次数据：确诊：${parseComparisonMsg(d.diagnosed, dataRecord.lastDiagnosed)} 人，疑似：${parseComparisonMsg(d.suspect, dataRecord.lastSuspect)} 人，死亡：${parseComparisonMsg(d.death, dataRecord.lastDeath)} 人，治愈：${parseComparisonMsg(d.cured, dataRecord.lastCured)} 人`
 				}
+
 				dataRecord.lastUpdateTime = getNowTime()
 				dataRecord.lastDiagnosed = d.diagnosed
 				dataRecord.lastSuspect = d.suspect
 				dataRecord.lastDeath = d.death
 				dataRecord.lastCured = d.cured
 				saveData()
-				// console.log(res.data)
-				// console.log('上次数据更新时间', d.date)
-				// console.log(`全国数据：确诊：${d.diagnosed} 人，疑似：${d.suspect} 人，死亡：${d.death} 人，治愈：${d.cured} 人`)
 				resolve(msg)
 			})
 	})
+
+	const parseComparisonMsg = (cur, lat) => {
+		let str = lat >= cur ? '增加 ' : '减少 '
+		str += Math.abs(lat - cur)
+		return str
+	}
 
 	// 检查是否需要广播，需要则发广播
 	const checkNeedReport = () => {
@@ -58,7 +64,7 @@
 		let d = localStorage.getItem(storageKey)
 		if (d !== null) {
 			console.log('成功读取存档')
-			dataRecord = JSON.parse(data)
+			dataRecord = JSON.parse(d)
 			isNewUser = false
 		} else {
 			console.log('木有存档')
@@ -88,8 +94,6 @@
 
 	setInterval(() => {
 		checkNeedReport()
-		
 	}, loopSecond * 1000)
-	// sendReport()
 
 }, 1 * 1000)
