@@ -1,5 +1,8 @@
 # 疫情播报微博 bot 浏览器插件
-+ 数据来源：https://www.tianqiapi.com
++ 数据来源：https://www.tianqiapi.com 接口实时同步卫健委
+
+## 图片示例
+![示例图片](./exm.png)
 
 ## 如何使用
 + 下载本项目
