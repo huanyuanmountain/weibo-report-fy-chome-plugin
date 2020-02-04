@@ -12,7 +12,7 @@
 	const inputBox = document.querySelector('.send_weibo.S_bg2.clearfix.send_weibo_long').children[1].children[0]
 	const reportBtn = document.querySelector('.W_btn_a.btn_30px')
 	const eventManager = new EventTarget()
-	const storageKey = 'douban_bot_report'
+	const storageKey = 'weibo_bot_report'
 	const reportTimeList = ['06:00', '18:00',]
 	let isNewUser = true
 	let isRunning = false
