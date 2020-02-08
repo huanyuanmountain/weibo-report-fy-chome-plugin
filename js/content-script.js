@@ -95,7 +95,16 @@
 	// 创建控制层
 	const createLayer = () => {
 		const layer = document.createElement('div')
-		layer.style = 'display: block; padding: 0px; margin: 0px; z-index: 99999; position: fixed; top:60px; left: 60px; background-color:rgba(255,255,255,0.8);'
+		layer.style.display = 'block'
+		layer.style.padding = 0
+		layer.style.margin = 0
+		layer.style.zIndex = 99999
+		layer.style.position = 'fixed'
+		layer.style.top = 60 + 'px'
+		layer.style.left = 60 + 'px'
+		layer.style.backgroundColor = 'rgba(255,255,255,0.8)'
+		layer.style.border = 2 + 'px' + ' solid' + ' gray'
+
 		document.body.appendChild(layer)
 		return layer
 	}
@@ -104,7 +113,8 @@
 	const createSwitchButton = (layer) => {
 		const btn = document.createElement('button')
 		btn.innerText = 'bot 开关'
-		btn.style = 'margin: 3px;font-size: 10px;'
+		btn.style.margin = 3 + 'px'
+		btn.style.fontSize = 10 + 'px'
 		layer.appendChild(btn)
 		btn.onclick = switchBot
 	}
@@ -113,7 +123,9 @@
 	const createMessageLog = (layer) => {
 		const prg = document.createElement('p')
 		prg.innerText = 'log view \n'
-		prg.style = 'margin: 3px;font-size: 10px;line-height:15px'
+		prg.style.margin = 3 + 'px'
+		prg.style.fontSize = 10 + 'px'
+		prg.style.lineHeight = 15 + 'px'
 		prg.id = 'message-log-prg'
 		layer.appendChild(prg)
 	}
@@ -141,7 +153,7 @@
 		try {
 			const prg = document.getElementById('message-log-prg')
 			let str = isRunning ? '机器人正在运行 (ง •_•)ง' : '机器人休息中 (～﹃～)~zZ'
-			str += '\n发布消息时间：'
+			str += '\n\n发布消息时间：'
 			for (let i = 0; i < reportTimeList.length; i++) {
 				str += '\n' + reportTimeList[i]
 			}
