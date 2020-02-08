@@ -119,6 +119,47 @@
 		btn.onclick = switchBot
 	}
 
+	// 创建移动杆
+	const createDragHandle = (layer) => {
+		const d = document.createElement('div')
+		d.innerText = '《☸》'
+		d.style.display = 'block'
+		d.style.float = 'right'
+		d.style.cursor = 'crosshair'
+		d.style.color = 'red'
+		layer.appendChild(d)
+
+		let dragging = false
+		let tLeft, tTop
+
+		// 监听鼠标按下事件
+		d.addEventListener('mousedown', (e) => {
+			if (e.target == d) {
+
+				dragging = true // 激活拖拽状态
+				let moveElemRect = layer.getBoundingClientRect()
+				tLeft = e.clientX - moveElemRect.left // 鼠标按下时和选中元素的坐标偏移:x坐标
+				tTop = e.clientY - moveElemRect.top // 鼠标按下时和选中元素的坐标偏移:y坐标
+			}
+		})
+
+		// 监听鼠标放开事件
+		d.addEventListener('mouseup', (e) => {
+			dragging = false
+		})
+
+		// 监听鼠标移动事件
+		d.addEventListener('mousemove', (e) => {
+			if (dragging) {
+				let moveX = e.clientX - tLeft
+				let moveY = e.clientY - tTop
+
+				layer.style.left = moveX + 'px'
+				layer.style.top = moveY + 'px'
+			}
+		})
+	}
+
 	// 日志创建标签
 	const createMessageLog = (layer) => {
 		const prg = document.createElement('p')
@@ -134,6 +175,7 @@
 	const createPanel = () => {
 		let layer = createLayer()
 		createSwitchButton(layer)
+		createDragHandle(layer)
 		createMessageLog(layer)
 	}
 
