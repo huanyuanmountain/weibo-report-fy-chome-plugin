@@ -43,7 +43,7 @@
 
 	// 解析对比信息，对比上次和这次的信息
 	const parseComparisonMsg = (cur, lat) => {
-		let str = lat >= cur ? '增加 ' : '减少 '
+		let str = lat >= cur ? '减少 ' : '增加 '
 		str += Math.abs(lat - cur)
 		return str
 	}
